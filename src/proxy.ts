@@ -51,6 +51,11 @@ export function getAddonBase(req: any): string {
     const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
     let host = req.headers['x-forwarded-host'] || req.headers.host || req.get('host');
     
+    // If the host is just the internal app name (no dots), append the BeamUp domain
+    if (host && !host.includes('.') && host !== 'localhost') {
+        host = `${host}.a.baby-beamup.club`;
+    }
+    
     // If x-forwarded-host is a list (from multiple proxies), take the first one
     if (host && host.includes(',')) {
         host = host.split(',')[0].trim();
